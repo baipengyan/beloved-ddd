@@ -1,0 +1,65 @@
+server:
+  port: 9090
+#  http2:
+#    enabled: true
+
+# 加密配置
+jasypt:
+  encryptor:
+    password: @jasypt.encryptor.password@
+    algorithm: PBEWITHHMACSHA512ANDAES_256
+    iv-generator-classname: org.jasypt.iv.RandomIvGenerator
+
+spring:
+  application:
+    name: phoenix-king-ddd
+  cloud:
+    sentinel:
+      transport:
+        dashboard: @sentinel.dashboard.address@
+    #      datasource:
+    #        flow:
+    #          nacos:
+    #            server-addr: @nacos.server.address@
+    #            namespace: @nacos.namespace@
+    #            group-id: @nacos.group@
+    #            data-id: ${spring.application.name}-sentinel-flow-rules
+    #            data-type: json
+    #            rule-type: flow
+    #        degrade:
+    #          nacos:
+    #            server-addr: @nacos.server.address@
+    #            namespace: @nacos.namespace@
+    #            group-id: @nacos.group@
+    #            data-id: ${spring.application.name}-sentinel-degrade-rules
+    #            data-type: json
+    #            rule-type: degrade
+    #      eager: true
+    nacos:
+      server-addr: @nacos.server.address@
+      username: @nacos.username@
+      password: @nacos.password@
+      # 注册中心
+      discovery:
+        namespace: @nacos.namespace@
+        cluster-name: @nacos.cluster.name@
+      # 配置中心
+      config:
+        file-extension: yml
+        namespace: @nacos.namespace@
+        group: @nacos.group@
+        # 拓展配置
+        extension-configs:
+          - group: @nacos.group@
+            data-id: phoenix-king-extension.${spring.cloud.nacos.config.file-extension}
+            refresh: true
+          - dataId: dynamic-tp.${spring.cloud.nacos.config.file-extension}
+            group: @nacos.group@
+            refresh: true
+        # 共享配置
+        shared-configs:
+          - group: @nacos.group@
+            data-id: phoenix-king-shared.${spring.cloud.nacos.config.file-extension}
+            refresh: true
+  profiles:
+    active: @activated@
